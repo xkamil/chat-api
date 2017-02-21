@@ -15,24 +15,29 @@ router.get('/', function (req, res, next) {
     })
 });
 
-router.get('/:id', function (req, res, next) {
+router.get('/me', function (req, res, next) {
+    var token = req.header('token');
 
-    User.findOne({_id: req.params.id}, function (err, user) {
+    Token.findOne({token: token}, function (err, aToken) {
         if (err) {
-            if (err.name == 'CastError' && err.kind == 'ObjectId') {
-                next({
-                    statusCode: statusCode.HTTP_NOT_FOUND
-                })
-            } else {
-                next(err);
-            }
-        } else if (user) {
-            res.json(user);
+            next(err);
+        } else if (aToken) {
+            aToken.getUser(function (err, aUser) {
+                if (err) {
+                    next(err);
+                } else if (aUser) {
+                    res.status(statusCode.HTTP_OK).json(aUser);
+                } else {
+                    next(aUser)
+                }
+            });
         } else {
-            res.status(statusCode.HTTP_NOT_FOUND).end();
+            next({
+                staatus: statusCode.HTTP_NOT_FOUND,
+                message: 'Token not found'
+            })
         }
-    });
-
+    })
 });
 
 router.post('/login', function (req, res, next) {

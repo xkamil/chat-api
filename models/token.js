@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var SHA256 = require("crypto-js/sha256");
 var statusCode = require("../bin/status_code");
+var User = require('./user');
 
 var TokenSchema = new Schema({
         user_id: {
@@ -33,6 +34,21 @@ TokenSchema.pre('validate', function (next) {
         next();
     }
 });
+
+TokenSchema.methods.getUser = function (callback) {
+    User.findOne({_id: this.user_id}, function (err, aUser) {
+        if (err) {
+            callback(err);
+        } else if (aUser) {
+            callback(null, aUser);
+        } else {
+            callback({
+                statusCode: statusCode.HTTP_NOT_FOUND,
+                message: 'User with id ' + this.user_id + ' not found'
+            });
+        }
+    })
+};
 
 
 var Token = mongoose.model('Token', TokenSchema);
