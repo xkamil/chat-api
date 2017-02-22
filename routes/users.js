@@ -5,79 +5,75 @@ var Token = require('../models/token');
 var statusCode = require("../bin/status_code");
 
 router.get('/', function (req, res, next) {
-    User.find(function (err, users) {
 
-        if (err) {
-            next({message: err});
-        } else {
-            res.json(users);
-        }
+    User.find(function (err, users) {
+        if (err) { return next(err); }
+
+        res.json(users);
     })
+
 });
 
 router.get('/me', function (req, res, next) {
     var token = req.header('token');
-
+    
     Token.findOne({token: token}, function (err, aToken) {
-        if (err) {
-            next(err);
-        } else if (aToken) {
-            aToken.getUser(function (err, aUser) {
-                if (err) {
-                    next(err);
-                } else if (aUser) {
-                    res.status(statusCode.HTTP_OK).json(aUser);
-                } else {
-                    next(aUser)
-                }
-            });
-        } else {
-            next({
-                staatus: statusCode.HTTP_NOT_FOUND,
-                message: 'Token not found'
+        if (err) { return next(err) }
+        if (!aToken) {
+            return next({
+                status: statusCode.HTTP_NOT_FOUND,
+                message: 'Token ' + token + ' not found.'
             })
         }
+
+        User.findOne({_id: aToken.user_id}, function (err, aUser) {
+            if (err) { return next(err) }
+            if (!aUser) {
+                return next({
+                    status: statusCode.HTTP_NOT_FOUND,
+                    message: 'User not found'
+                })
+            }
+
+            res.status(statusCode.HTTP_OK).json(aUser);
+        });
     })
+
 });
 
-router.post('/login', function (req, res, next) {
+router.post('/login', function (req, res) {
 
     var pLogin = req.body.login;
     var pPassword = req.body.password;
 
     User.findOne({login: pLogin}, function (err, user) {
-        if (err) {
-            next(err);
-        } else if (user) {
-            if (user.comparePassword(pPassword)) {
+        if (err) { return next(err) }
 
-                var token = new Token({
-                    user_id: user._id
-                });
-
-                token.save(function (err, savedToken) {
-                    if (err) {
-                        next(err);
-                    } else {
-                        res.status(statusCode.HTTP_OK).json({
-                            user_id: savedToken.user_id,
-                            token: savedToken.token
-                        });
-                    }
-                });
-
-            } else {
-                next({
-                    statusCode: statusCode.HTTP_UNAUTHORIZED,
-                    message: 'Wrong password'
-                })
-            }
-        } else {
-            next({
-                statusCode: statusCode.HTTP_UNAUTHORIZED,
-                message: 'User ' + pLogin + ' is not registered'
+        if (!user) {
+            return next({
+                statusCode: statusCode.HTTP_NOT_FOUND,
+                message: 'User ' + pLogin + ' not found'
             })
         }
+
+        if (!user.comparePassword(pPassword)) {
+            return next({
+                statusCode: statusCode.HTTP_UNAUTHORIZED,
+                message: 'Wrong password'
+            })
+        }
+
+        var token = new Token({user_id: user._id});
+
+        token.save(function (err, savedToken) {
+            if (err) { return next(err) }
+
+            res.status(statusCode.HTTP_OK).json({
+                user_id: savedToken.user_id,
+                token: savedToken.token
+            });
+        });
+
     })
 });
 
@@ -89,25 +85,18 @@ router.post('/register', function (req, res, next) {
     });
 
     user.save(function (err, savedUser) {
-        if (err) {
-            next(err);
-        } else {
+        if (err) { return next(err) }
 
-            var token = new Token({
-                user_id: savedUser._id
-            });
+        var token = new Token({user_id: savedUser._id});
 
-            token.save(function (err, savedToken) {
-                if (err) {
-                    next(err);
-                } else {
-                    res.status(statusCode.HTTP_CREATED).json({
-                        user_id: savedToken.user_id,
-                        token: savedToken.token
-                    });
-                }
+        token.save(function (err, savedToken) {
+            if (err) {return next(err)}
+
+            res.status(statusCode.HTTP_CREATED).json({
+                user_id: savedToken.user_id,
+                token: savedToken.token
             });
-        }
+        });
     })
 });
 
