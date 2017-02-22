@@ -3,45 +3,65 @@ var router = express.Router();
 var User = require('../models/user');
 var Token = require('../models/token');
 var statusCode = require("../bin/status_code");
+var mongoose = require('mongoose');
 
 router.get('/', function (req, res, next) {
 
-    User.find(function (err, users) {
-        if (err) { return next(err); }
-
-        res.json(users);
-    })
-
+    User.find()
+        .select('_id login')
+        .exec(function (err, users) {
+            if (err) { return next(err); }
+            res.json(users);
+        })
 });
 
 router.get('/me', function (req, res, next) {
     var token = req.header('token');
-    
-    Token.findOne({token: token}, function (err, aToken) {
+    var id = req.p_user_id;
+
+    User.findOne({_id: id}, function (err, aUser) {
         if (err) { return next(err) }
-        if (!aToken) {
+        if (!aUser) {
             return next({
                 status: statusCode.HTTP_NOT_FOUND,
-                message: 'Token ' + token + ' not found.'
+                message: 'User not found'
             })
         }
 
-        User.findOne({_id: aToken.user_id}, function (err, aUser) {
-            if (err) { return next(err) }
-            if (!aUser) {
-                return next({
-                    status: statusCode.HTTP_NOT_FOUND,
-                    message: 'User not found'
-                })
-            }
-
-            res.status(statusCode.HTTP_OK).json(aUser);
-        });
-    })
-
+        res.status(statusCode.HTTP_OK).json(aUser);
+    });
 });
 
-router.post('/login', function (req, res) {
+router.get('/:id', function (req, res, next) {
+    var id = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return next(
+            {
+                statusCode: statusCode.HTTP_NOT_FOUND,
+                message: 'Invalid user id provided. Id: ' + id
+            }
+        );
+    }
+
+    User.findOne()
+        .where({_id: id})
+        .select('_id login')
+        .exec(function (err, user) {
+            if (err) { return next(err); }
+            if (!user) {
+                return next(
+                    {
+                        statusCode: statusCode.HTTP_NOT_FOUND,
+                        message: 'User with id: ' + id + ' not found.'
+                    }
+                );
+            }
+            res.json(user);
+        })
+});
+
+router.post('/login', function (req, res, next) {
 
     var pLogin = req.body.login;
     var pPassword = req.body.password;

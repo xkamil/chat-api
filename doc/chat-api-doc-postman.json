@@ -2,11 +2,174 @@
 	"variables": [],
 	"info": {
 		"name": "chat-api",
-		"_postman_id": "0a68175b-a8fc-0bc1-e231-af3bb6c6d8de",
+		"_postman_id": "6476c3f6-aade-fcec-129f-040c05ef7b76",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "/conversations",
+			"description": "",
+			"item": [
+				{
+					"name": "get all",
+					"request": {
+						"url": "{{url}}/conversations",
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "86109235a31f04b18ebd4dd63c38351b3e3376a94eef60ef1f44cc654e127a93",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "add",
+					"request": {
+						"url": "{{url}}/conversations",
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "86109235a31f04b18ebd4dd63c38351b3e3376a94eef60ef1f44cc654e127a93",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\n\n]"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "get all containing specified users",
+					"request": {
+						"url": "{{url}}/conversations/withUsers",
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "86109235a31f04b18ebd4dd63c38351b3e3376a94eef60ef1f44cc654e127a93",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t\"\"]"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "get all with specified users only",
+					"request": {
+						"url": "{{url}}/conversations/withUsers/strict",
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "86109235a31f04b18ebd4dd63c38351b3e3376a94eef60ef1f44cc654e127a93",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\n\t\"58ab3f3b43aa59039c0cb7a4\"]"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/sentences",
+			"description": "",
+			"item": [
+				{
+					"name": "get all",
+					"request": {
+						"url": "{{url}}/sentences",
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "717ea3ff80eced53e8b912c19a2d57bede68542a397d28caf9093a97097f44a4",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "get for conversation",
+					"request": {
+						"url": "{{url}}/sentences/58adc2a8df42bb0278dd52a1",
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "717ea3ff80eced53e8b912c19a2d57bede68542a397d28caf9093a97097f44a4",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"content\":\"Pierwszy tekst\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "get all for conversation",
+					"request": {
+						"url": "{{url}}/sentences/58adc2a8df42bb0278dd52a1",
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "717ea3ff80eced53e8b912c19a2d57bede68542a397d28caf9093a97097f44a4",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "/users",
 			"description": "",
@@ -14,12 +177,12 @@
 				{
 					"name": "/me",
 					"request": {
-						"url": "{{url}}/users/me",
+						"url": "{{url}}/sentences/",
 						"method": "GET",
 						"header": [
 							{
 								"key": "token",
-								"value": "9a9c1c21f220817bef8d5310c3b355656a7faea0516149ed50e2cda2e5a41e77",
+								"value": "717ea3ff80eced53e8b912c19a2d57bede68542a397d28caf9093a97097f44a4",
 								"description": ""
 							}
 						],
@@ -45,7 +208,7 @@
 							"urlencoded": [
 								{
 									"key": "login",
-									"value": "januszek",
+									"value": "januszekf",
 									"type": "text",
 									"enabled": true
 								},
@@ -71,6 +234,11 @@
 								"key": "Content-Type",
 								"value": "application/x-www-form-urlencoded",
 								"description": ""
+							},
+							{
+								"key": "token",
+								"value": "",
+								"description": ""
 							}
 						],
 						"body": {
@@ -90,6 +258,40 @@
 								}
 							]
 						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "get by id",
+					"request": {
+						"url": "{{url}}/users/58ab380c4127240d9c742a65",
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "86109235a31f04b18ebd4dd63c38351b3e3376a94eef60ef1f44cc654e127a93",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "get all",
+					"request": {
+						"url": "{{url}}/users",
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "86109235a31f04b18ebd4dd63c38351b3e3376a94eef60ef1f44cc654e127a93",
+								"description": ""
+							}
+						],
+						"body": {},
 						"description": ""
 					},
 					"response": []
