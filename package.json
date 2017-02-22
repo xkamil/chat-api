@@ -14,8 +14,9 @@
     "debug": "~2.6.0",
     "ejs": "~2.5.5",
     "express": "~4.14.1",
-    "mongoose": "^4.8.4"
+    "mongoose": "^4.8.4",
     "morgan-body": "^0.9.5",
     "serve-favicon": "~2.3.2"
   }
 }
+it 

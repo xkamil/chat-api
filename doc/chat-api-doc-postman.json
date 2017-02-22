@@ -1,0 +1,100 @@
+{
+	"variables": [],
+	"info": {
+		"name": "chat-api",
+		"_postman_id": "0a68175b-a8fc-0bc1-e231-af3bb6c6d8de",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/users",
+			"description": "",
+			"item": [
+				{
+					"name": "/me",
+					"request": {
+						"url": "{{url}}/users/me",
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "9a9c1c21f220817bef8d5310c3b355656a7faea0516149ed50e2cda2e5a41e77",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/register",
+					"request": {
+						"url": "{{url}}/users/register",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "login",
+									"value": "januszek",
+									"type": "text",
+									"enabled": true
+								},
+								{
+									"key": "password",
+									"value": "januszek",
+									"type": "text",
+									"enabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/login",
+					"request": {
+						"url": "{{url}}/users/login",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "login",
+									"value": "januszek",
+									"type": "text",
+									"enabled": true
+								},
+								{
+									"key": "password",
+									"value": "januszek",
+									"type": "text",
+									"enabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
