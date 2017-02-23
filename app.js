@@ -5,15 +5,15 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/chat-api');
+mongoose.connect('mongodb://janusz:mietek@ds145009.mlab.com:45009/users');
 
 var authentication_mid = require('./middleware/authentication_mid');
 var users = require('./routes/users');
+var conversations = require('./routes/conversations');
+var sentences = require('./routes/sentences');
 var error_handler_mid = require('./middleware/error_handler');
 
 var app = express();
-
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -27,6 +27,8 @@ app.use(authentication_mid);
 
 // Routes
 app.use('/users', users);
+app.use('/conversations', conversations);
+app.use('/sentences', sentences);
 
 // Error handler
 app.use(error_handler_mid);
