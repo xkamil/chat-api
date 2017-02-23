@@ -16,6 +16,7 @@ module.exports = function (req, res, next) {
                         message: 'Bad or expired token'
                     });
                 }else{
+                    req.p_user_id = aToken.user_id;
                     next();
                 }
             });
