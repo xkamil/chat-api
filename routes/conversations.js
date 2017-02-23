@@ -123,16 +123,6 @@ router.post('/', function (req, res, next) {
         })
     }
 
-    // Check if users ids are valid
-    for (var i = 0; i < users.length; i++) {
-        if (!mongoose.Types.ObjectId.isValid(users[i])) {
-            return next({
-                statusCode: statusCode.HTTP_BAD_REQUEST,
-                message: 'User id id not valid ObjectId. Id: ' + users[i]
-            })
-        }
-    }
-
     Conversation.findOne({"users": {$all: users, $size: users.length}}, function (err, conversation) {
         if (err) { return next(err); }
         if (conversation) {
