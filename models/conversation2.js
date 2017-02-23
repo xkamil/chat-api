@@ -35,15 +35,6 @@ ConversationSchema.pre('validate', function (next) {
         }
     }
 
-    // Check if users ids are valid ObjectId
-    for (var i = 0; i < this.users.length; i++) {
-        if (!mongoose.Types.ObjectId.isValid(this.users[i])) {
-            error.statusCode = statusCode.HTTP_BAD_REQUEST;
-            error.message = 'User id id not valid ObjectId. Id: ' + this.users[i];
-            return next(error)
-        }
-    }
-
     next();
 });
 
