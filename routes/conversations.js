@@ -5,6 +5,7 @@ var Token = require('../models/token');
 var Conversation = require('../models/conversation2');
 var statusCode = require("../bin/status_code");
 var mongoose = require('mongoose');
+var Sentence = require('../models/sentence');
 
 router.get('/', function (req, res, next) {
 
@@ -73,7 +74,7 @@ router.post('/withUsers', function (req, res, next) {
     })
 });
 
-router.post('/withUsers/strict', function (req, res, next) {
+router.post('/findOrCreate', function (req, res, next) {
     var token = req.header('token');
     var users = req.body;
     var user_id = req.p_user_id;
@@ -100,10 +101,17 @@ router.post('/withUsers/strict', function (req, res, next) {
     Conversation.findOne({"users": {$all: users,$size: users.length}}, function (err, conversations) {
         if (err) { return next(err); }
         if (!conversations) {
-            return next({
-                statusCode: statusCode.HTTP_NOT_FOUND,
-                message: 'Conversation with 2 users not found'
-            })
+
+            var conversation = new Conversation({
+               users: users
+            });
+
+            conversation.save(function (err) {
+               if(err){ return next(err)}
+
+               return res.status(statusCode.HTTP_OK).json();
+            });
+
         }
         res.json(conversations);
     })
@@ -154,5 +162,59 @@ router.post('/', function (req, res, next) {
     })
 
 });
+
+router.get('/:conversationId/sentences', function (req, res, next) {
+    var conversationId = req.params.conversationId;
+
+    if (!mongoose.Types.ObjectId.isValid(conversationId)) {
+        return next({
+            statusCode: statusCode.HTTP_BAD_REQUEST,
+            message: 'Invalid conversation id'
+        })
+    }
+
+    Sentence.find()
+        .where({conversation_id: conversationId})
+        .exec(function (err, sentences) {
+            if (err) { return next(err); }
+            res.json(sentences);
+        })
+});
+
+router.post('/:conversationId/sentences', function (req, res, next) {
+
+    var user_id = req.p_user_id;
+    var conversationId = req.params.conversationId;
+    var content = req.body.content;
+
+    if (!mongoose.Types.ObjectId.isValid(conversationId)) {
+        return next({
+            statusCode: statusCode.HTTP_BAD_REQUEST,
+            message: 'Invalid conversation id'
+        })
+    }
+
+    if (!content || content.trim().length == 0) {
+        return next({
+            statusCode: statusCode.HTTP_BAD_REQUEST,
+            message: "Content can't be empty"
+        })
+    }
+
+    var sentence = new Sentence({
+        user_id: user_id,
+        content: content,
+        conversation_id: conversationId
+    });
+
+    sentence.save(function (err, savedSentence) {
+        if (err) { return next(err) }
+
+        res.status(statusCode.HTTP_OK).json({
+            id: savedSentence._id
+        });
+    });
+});
+
 
 module.exports = router;

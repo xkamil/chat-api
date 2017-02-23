@@ -6,16 +6,8 @@ var Sentence = require('../models/sentence');
 var statusCode = require("../bin/status_code");
 var mongoose = require('mongoose');
 
-router.get('/', function (req, res, next) {
 
-    Sentence.find()
-        .exec(function (err, sentences) {
-            if (err) { return next(err); }
-            res.json(sentences);
-        })
-});
-
-router.get('/:conversationId', function (req, res, next) {
+router.get('/:conversationId/sentences', function (req, res, next) {
     var conversationId = req.params.conversationId;
 
     if (!mongoose.Types.ObjectId.isValid(conversationId)) {
@@ -33,7 +25,7 @@ router.get('/:conversationId', function (req, res, next) {
         })
 });
 
-router.post('/:conversationId', function (req, res, next) {
+router.post('/:conversationId/sentences', function (req, res, next) {
 
     var user_id = req.p_user_id;
     var conversationId = req.params.conversationId;

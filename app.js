@@ -28,7 +28,6 @@ app.use(authentication_mid);
 // Routes
 app.use('/users', users);
 app.use('/conversations', conversations);
-app.use('/sentences', sentences);
 
 // Error handler
 app.use(error_handler_mid);
