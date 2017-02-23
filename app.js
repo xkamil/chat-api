@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/chat-api');
+mongoose.connect('mongodb://janusz:mietek@ds145009.mlab.com:45009/users');
 
 var authentication_mid = require('./middleware/authentication_mid');
 var users = require('./routes/users');
